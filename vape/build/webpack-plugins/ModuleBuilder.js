@@ -7,7 +7,11 @@ function ModuleBuilder({ hook, folders }) {
 }
 
 ModuleBuilder.prototype.apply = function (compiler) {
+  const timefix = 11000
   compiler.plugin(this.hook, (compilationParams, callback) => {
+    if (this.hook === 'watch-run')
+      compilationParams.startTime += timefix
+
     return Promise.all(this.folders.map(folder => build(folder)))
     .then(() => {
       callback()
@@ -16,6 +20,10 @@ ModuleBuilder.prototype.apply = function (compiler) {
       console.error(err)
       callback()
     })
+  })
+  compiler.plugin('done', (stats) => {
+    if (this.hook === 'watch-run')
+      stats.startTime -= timefix
   })
 }
 
@@ -99,10 +107,12 @@ function build(folder) {
         if (err)
           return rej(err)
 
+        // return res(`${folder}/index.js written`)
+
         // hack that backdates files to block infinite watch/build loop
-        let f    = path.resolve(`${folder}/index.js`)
+        let f    = `${folder}/index.js`
         let now  = Date.now() / 1000
-        let then = now - 100000
+        let then = now - 10
         fs.utimes(f, then, then, err => { 
           if (err)
             return rej(err)

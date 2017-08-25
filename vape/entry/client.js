@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import 'es6-promise/auto'
 import { createApp } from '../app'
-import ProgressBar from '../../components/ProgressBar.vue'
-import plugins from '../../plugins'
+import ProgressBar from 'components/ProgressBar.vue'
+import plugins from 'plugins'
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
@@ -40,12 +40,18 @@ Object.keys(plugins).forEach(name => Vue.use(plugins[name]))
 
 createApp()
 .then(({ app, router, store }) => {
+  // save currentUser
+  const currentUser = store.state.currentUser
+
   // prime the store with server-initialized state.
   // the state is determined during SSR and inlined in the page markup.
   if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__)
     router.history.updateRoute(router.resolve(store.state.route.fullPath).resolved)
   }
+
+  // persist currentUser - server doesn't have that piece of state (yet)
+  store.state.currentUser = currentUser
 
   // set initial page
   Vue.set(store.state, 'page', Object.values(store.state.pages).find(page => {

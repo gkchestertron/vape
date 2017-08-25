@@ -11,14 +11,18 @@ module.exports = {
     ? false
     : '#cheap-module-source-map',
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve('./vape/dist'),
     publicPath: '/dist/',
     filename: '[name].[chunkhash].js'
   },
   resolve: {
+    modules: [
+      path.resolve('./'),
+      path.resolve('./node_modules')
+    ],
     alias: {
       vue: 'vue/dist/vue.js', // compile templates on the fly
-      'public': path.resolve(__dirname, '../../public')
+      'public': path.resolve('./public')
     }
   },
   module: {
@@ -86,6 +90,9 @@ module.exports = {
         ] })
       ]
     : [
-        new FriendlyErrorsPlugin()
+        new FriendlyErrorsPlugin(),
+        new ExtractTextPlugin({
+          filename: 'common.[chunkhash].css'
+        }),
       ]
 }

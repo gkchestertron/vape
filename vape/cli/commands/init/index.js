@@ -1,12 +1,26 @@
-const writeConfig = require('./writeConfig')
-const generateSql = require('./generateSql')
-const fwf         = require('fun_with_flags')
+const writeConfig      = require('./writeConfig')
+const generateSql      = require('./generateSql')
+const checkForVapeRepo = require('./checkForVapeRepo')
+const fwf              = require('fun_with_flags')
 
 module.exports = {
   description: 'init this vape project',
 
   exec(target) {
-    return writeConfig(target)
+    // clear
+    return fwf.shell('clear')
+
+    // check for repo link
+    .then(() => {
+      return checkForVapeRepo(target)
+    })
+
+    // write config
+    .then(() => {
+      return writeConfig(target)
+    })
+
+    // generate sql files
     .then(props => {
       return generateSql(props)
     })

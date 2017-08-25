@@ -25,29 +25,12 @@ module.exports = function setupDevServer (app, cb) {
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
-    new ModuleBuilder({ hook: 'watch-run', folders: [
-      './components',
-      './layouts',
-      './plugins',
-      './templates',
-    ] }),
-    new PageBuilder({ hook: 'watch-run' }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   )
 
   // create the compiler
   const clientCompiler = webpack(clientConfig)
-
-  // fix times to block loop
-  const timefix = 11000;
-  clientCompiler.plugin('watch-run', (watching, callback) => {
-    watching.startTime += timefix;
-    callback()
-  });
-  clientCompiler.plugin('done', (stats) => {
-    stats.startTime -= timefix
-  })
 
   // dev middleware
   const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
@@ -78,6 +61,15 @@ module.exports = function setupDevServer (app, cb) {
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig)
   const mfs = new MFS()
+  serverConfig.plugins.push(
+    new ModuleBuilder({ hook: 'watch-run', folders: [
+      './components',
+      './layouts',
+      './plugins',
+      './templates',
+    ] }),
+    new PageBuilder({ hook: 'watch-run' })
+  )
   serverCompiler.outputFileSystem = mfs
   serverCompiler.watch({}, (err, stats) => {
     if (err) throw err

@@ -1,13 +1,16 @@
 import Vue from 'vue'
-import DefaultLayout from '../layouts/Default.vue'
+import DefaultLayout from 'layouts/Default.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import titleMixin from './util/title'
 import * as filters from './util/filters'
+import apollo from './ApolloClient'
+import gql from 'graphql-tag'
+
 
 // add custom components
-import components from '../components'
+import components from 'components'
 const Components = {
   install: function (Vue) {
     if (Vue._custom_components_installed) {
@@ -25,10 +28,10 @@ const Components = {
 Vue.use(Components)
 
 // add styles
-import '../styles'
+import 'styles'
 
 // add vendor js
-import '../vendor'
+import 'vendor'
 
 // mixin for handling title
 Vue.mixin(titleMixin)
@@ -46,7 +49,26 @@ export function createApp () {
 
   return createRouter(store)
   .then(router => {
-
+    return apollo()
+    .query({
+      query: gql`{ currentPerson {
+        id
+        fullName
+      } }`
+    })
+    .then(result => {
+      store.commit('SET_CURRENT_USER', { user: result.data.currentPerson })
+    })
+    .then(() => {
+      return router
+    })
+    .catch(err => {
+      store.commit('SET_CURRENT_USER', { user: null })
+      console.warn('Authentication Error', err)
+      return router
+    })
+  })
+  .then(router => {
     // sync the router with the vuex store.
     // this registers `store.state.route`
     sync(store, router)

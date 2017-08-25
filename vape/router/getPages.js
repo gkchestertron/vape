@@ -1,7 +1,7 @@
 import apollo from '../ApolloClient'
 import gql from 'graphql-tag'
 import Vue from 'vue'
-import templateFiles from '../../templates'
+import templateFiles from 'templates'
 
 export default function (store) {
   // tet pages from the db
@@ -68,5 +68,9 @@ export default function (store) {
       }
     })
     .filter(page => { return !!page })
+  })
+  .catch(err => {
+    localStorage.removeItem('authToken')
+    window.location = window.location
   })
 }

@@ -1,4 +1,5 @@
 import { createApp } from '../app'
+import Vue from 'vue'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -23,10 +24,15 @@ export default context => {
       // set router's location
       router.push(url)
 
-      // get a fresh set of the pages on every server load
+      // set initial page
+      Vue.set(store.state, 'page', Object.values(store.state.pages).find(page => {
+        let re = new RegExp(page.route)
+        return re.test(url)
+      }))
 
       // wait until router has resolved possible async hooks
       router.onReady(() => {
+
         const matchedComponents = router.getMatchedComponents()
         // no matched routes
         if (!matchedComponents.length) {
@@ -66,6 +72,7 @@ export default context => {
           // inline the state in the HTML response. This allows the client-side
           // store to pick-up the server-side state without having to duplicate
           // the initial data fetching on the client.
+          console.log(store.state)
           context.state = store.state
           resolve(app)
         }).catch(reject)

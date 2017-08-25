@@ -8,23 +8,19 @@ const config = require(path.resolve('./config/server'))
 module.exports = function (target) {
   const props = {}
 
-  // prompt for config values
-  return fwf.shell('clear')
-
   // get title
-  .then(() => {
-    console.log(`
+  console.log(`
 Initting vape project. Well ask some questions to setup your project config. 
 You can change these via the config folder any time,
 so if you don't know the answer or don't intend on using a feature, just leave it blank and hit enter.
 Warning: This will overwrite an existing config. Press CTRL-C to abort.
-    `)
+  `)
 
-    return fwf.prompt([{
+  // get title
+  return fwf.prompt([{
       name: 'APP_TITLE',
       message: 'What is the title of your project?'
-    }])
-  })
+  }])
 
   // get db details
   .then(result => {

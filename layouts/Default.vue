@@ -24,7 +24,8 @@
         }, 1000)
       }
 
-      return apollo().query({
+      return apollo()
+      .query({
         query: gql`{ currentPerson {
           id
           fullName
@@ -32,6 +33,10 @@
       })
       .then(result => {
         this.$store.commit('SET_CURRENT_USER', { user: result.data.currentPerson })
+      })
+      .catch(err => {
+        console.warn(err)
+        this.$store.commit('SET_CURRENT_USER', { user: null })
       })
     }
   }

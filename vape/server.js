@@ -20,7 +20,7 @@ const app = express()
 
 const template = fs.readFileSync(resolve('../index.template.html'), 'utf-8')
 
-const simpleMailer = require('../extensions/simpleMailClient')
+const simpleMailer = require(path.resolve('./extensions/simpleMailClient'))
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -66,7 +66,7 @@ const serve = (path, cache) => express.static(resolve(path), {
 app.use(compression({ threshold: 0 }))
 app.use(favicon('./public/favicon.png'))
 app.use('/dist', serve('./dist', true))
-app.use('/public', serve('../public', true))
+app.use('/public', serve(path.resolve('./public'), true))
 app.use('/manifest.json', serve('../manifest.json', true))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
 
