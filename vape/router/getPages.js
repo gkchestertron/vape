@@ -1,7 +1,7 @@
 import apollo from '../ApolloClient'
 import gql from 'graphql-tag'
 import Vue from 'vue'
-import templateFiles from 'templates'
+import pageFiles from 'pages'
 
 export default function (store) {
   // tet pages from the db
@@ -43,7 +43,7 @@ export default function (store) {
   // fixup data function and return route for router with page component
   .then(pages => {
     return pages.map(page => {
-      let templateFile = Object.values(templateFiles).find(templateFile => templateFile.name === page.template)
+      let templateFile = Object.values(pageFiles).find(templateFile => templateFile.name === page.template)
 
       // fail if we no longer have a template file for this page
       if (!templateFile) {

@@ -11,7 +11,7 @@ module.exports = {
     ? false
     : '#cheap-module-source-map',
   output: {
-    path: path.resolve('./vape/dist'),
+    path: path.resolve('./dist'),
     publicPath: '/dist/',
     filename: '[name].[chunkhash].js'
   },
