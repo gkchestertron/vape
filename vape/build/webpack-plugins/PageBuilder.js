@@ -5,23 +5,26 @@ const webpack        = require('webpack')
 const MFS            = require('memory-fs')
 const mfs            = new MFS()
 const rfs            = require('require-from-string')
-const templateConfig = require('../webpack.template.config.js')
-const isTest         = process.env.NODE_ENV === 'test'
+const pageConfig     = require('../webpack.page.config.js')
 
 // drop compiled files into MFS
-const templateCompiler = webpack(templateConfig)
+const templateCompiler = webpack(pageConfig    )
+
 templateCompiler.outputFileSystem = mfs
 
-function PageBuilder ({ hook }) {
-  this.hook = hook || 'run' // lets us set the hook to watch-run for dev mode
+function PageBuilder ({ hook, isTest }) {
+  this.hook   = hook || 'run' // lets us set the hook to watch-run for dev mode
+  this.isTest = (isTest !== false)
 }
 
 PageBuilder.prototype.apply = function (compiler) {
+  const isTest = this.isTest
+
   compiler.plugin(this.hook, (compilationParams, callback) => {
     return new Promise((resolve, reject) => {
       // run webpack to compile templates
       templateCompiler.run((err, stats) => {
-        let file = mfs.readFileSync(path.resolve(__dirname, '../../dist/templates.js'))
+        let file = mfs.readFileSync(path.resolve('./dist/pages.js'))
         let templates = rfs(file.toString())
 
         if (err)

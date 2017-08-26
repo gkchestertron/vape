@@ -25,6 +25,13 @@ module.exports = function setupDevServer (app, cb) {
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
+    new ModuleBuilder({ hook: 'watch-run', folders: [
+      './components',
+      './layouts',
+      './plugins',
+      './pages',
+    ] }),
+    new PageBuilder({ hook: 'watch-run', isTest: false }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   )
@@ -61,15 +68,6 @@ module.exports = function setupDevServer (app, cb) {
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig)
   const mfs = new MFS()
-  serverConfig.plugins.push(
-    new ModuleBuilder({ hook: 'watch-run', folders: [
-      './components',
-      './layouts',
-      './plugins',
-      './templates',
-    ] }),
-    new PageBuilder({ hook: 'watch-run' })
-  )
   serverCompiler.outputFileSystem = mfs
   serverCompiler.watch({}, (err, stats) => {
     if (err) throw err

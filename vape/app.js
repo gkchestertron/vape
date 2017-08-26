@@ -27,11 +27,12 @@ const Components = {
 }
 Vue.use(Components)
 
+// add vendor js
+import 'vendor'
+
 // add styles
 import 'styles'
 
-// add vendor js
-import 'vendor'
 
 // mixin for handling title
 Vue.mixin(titleMixin)

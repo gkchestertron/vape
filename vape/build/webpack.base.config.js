@@ -86,7 +86,7 @@ module.exports = {
           './components',
           './layouts',
           './plugins',
-          './templates',
+          './pages',
         ] })
       ]
     : [

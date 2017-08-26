@@ -5,9 +5,9 @@ const nodeExternals = require('webpack-node-externals')
 
 const config = merge(base, {
   target: 'node',
-  entry: './templates/index.js',
+  entry: './pages/index.js',
   output: {
-    filename: 'templates.js',
+    filename: 'pages.js',
     libraryTarget: 'commonjs2'
   },
   externals: nodeExternals({
