@@ -7,8 +7,9 @@ const pgPool = require('./pgPool')
  * @param {boolean} isTest - test flag, default true
  * @returns {promise}
  */
-function withPgClient(cb, isTest = true) {
+module.exports = function (cb, isTest = true) {
   let client
+  let result
 
   // connect
   return pgPool.connect()
@@ -21,7 +22,7 @@ function withPgClient(cb, isTest = true) {
 
   // call callback -- should be a promise
   .then(() => {
-    return cb(client)
+    return result = cb(client)
   })
 
   // commit or rollback depending on context
@@ -33,16 +34,14 @@ function withPgClient(cb, isTest = true) {
 
   // release
   .then(() => {
-    return client.release()
+    client.release()
+    return result
   })
 
   // make sure we rollback if an error occurs
   .catch(err => {
     console.error(err)
-    if (isTest)
-      return client.query('rollback').then(() => client.release())
-    return null
+    return client.query('rollback')
+    .then(() => client.release())
   })
 }
-
-module.exports = withPgClient

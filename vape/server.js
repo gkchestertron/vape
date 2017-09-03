@@ -19,7 +19,7 @@ const app = express()
 
 const template = fs.readFileSync(path.resolve('./index.template.html'), 'utf-8')
 
-const simpleMailer = require(path.resolve('./extensions/simpleMailClient'))
+const extensions = require(path.resolve('./extensions'))
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -140,9 +140,13 @@ app.use(postgraphql(config.PSQL_URI, config.PSQL_SCHEMA, {
   jwtPgTypeIdentifier : config.PSQL_SCHEMA + '.jwt_token'
 }))
 
+// add body parser
 app.use(bodyParser.json())
 
-app.post('/mail', simpleMailer)
+// install extensions
+for (let i in extensions) {
+  extensions[i].install(app)
+}
 
 app.get('*', isProd ? render : (req, res) => {
   readyPromise.then(() => render(req, res))

@@ -4,9 +4,10 @@ const path                    = require('path')
 const config                  = require(path.resolve('./config/server'))
 const pgUrl                   = config.PSQL_ADMIN_URI
 
-const pgPool = new Pool(Object.assign({}, parsePgConnectionString(pgUrl), {
+/**
+ * creates a pgPool with current config so it's easy to grab the same pool all over the app
+ */
+module.exports = new Pool(Object.assign({}, parsePgConnectionString(pgUrl), {
   max: 15,
   idleTimeoutMillis: 500,
 }))
-
-module.exports = pgPool
