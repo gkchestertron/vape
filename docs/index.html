@@ -12,10 +12,27 @@
 </body>
 <script>
   window.$docsify = {
+    autoHeader: true,
     loadSidebar: true,
-    name: 'vape',
+    loadNavbar: true,
+    markdown: {
+      renderer: {
+        listitem: function(text) {
+          if (/^\s*\[[x ]\]\s*/.test(text)) {
+            text = text
+              .replace(/^\s*\[ \]\s*/, '<input type="checkbox" disabled />')
+              .replace(/^\s*\[x\]\s*/, '<input type="checkbox" disabled checked="checked" />');
+            return '<li style="list-style: none">' + text + '</li>';
+          } else {
+            return '<li>' + text + '</li>';
+          }
+        }
+      }
+    },
+    name: 'Vape',
     repo: 'skyclutch/vape',
-    search: 'auto'
+    search: 'auto',
+    subMaxLevel: 2
   }
 </script>
 <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>

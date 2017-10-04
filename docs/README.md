@@ -1,5 +1,2 @@
 # VAPE
-The VAPE stack is Vuejs, Apollo, Postgraphql, and Expressjs. Presentation is handled in single-file vuejs components/views. Business logic is handled at the db level by postgresql. Postgraphql makes connecting the two simple.
-
-## Postgraphql
-Don't forget to create db users
+The VAPE stack is [Vuejs](https://vuejs.org), [Apollo](http://dev.apollodata.com/), [Postgraphql](https://github.com/postgraphql/postgraphql), and [Express](https://expressjs.com/). Presentation is handled in single-file vuejs components/views. Most business logic is handled at the db level by postgresql. Postgraphql makes connecting the two easy, giving you an ultra-light application layer. All these pieces run as express middleware, and can be deployed on a traditional server or serverless with AWS lambda.

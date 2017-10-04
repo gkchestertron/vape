@@ -1,2 +1,4 @@
 - [Intro](README.md)
-- [Auth](auth/README.md)
+- [Quick Start](quickstart.md)
+- [Folder Structure](folder-structure.md)
+- [Default Features](default-features.md)
